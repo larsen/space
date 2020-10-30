@@ -2,5 +2,5 @@
 
 A study in Lispbuilder SDL
 
-![](screeshot.png)
+![](screenshot.png)
 

@@ -37,8 +37,9 @@
   "Given an ENEMY object and current TIME, computes and update the
   ENEMY position."
   (let ((new-position (funcall (motion-f enemy) enemy time)))
-    (setf (x enemy) (aref new-position 0))
-    (setf (y enemy) (aref new-position 1))))
+    (when (< (aref new-position 1) *window-height*)
+      (setf (x enemy) (aref new-position 0))
+      (setf (y enemy) (aref new-position 1)))))
 
 (defun update-enemies-pos ()
   (loop for e in *enemies*

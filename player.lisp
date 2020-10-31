@@ -32,9 +32,14 @@
   (when (and *moving-west* (< (x player) *window-width*))
     (incf (x player) (* 1 (velocity player)))))
 
+(defun update-missile-pos (m)
+  (let ((new-position-y (- (y m) (* 1 (velocity m)))))
+    (when (> new-position-y 0)
+      (setf (y m) new-position-y))))
+
 (defun update-missiles-pos ()
   (loop for m in *player-missiles*
-        do (setf (y m) (- (y m) (* 1 (velocity m))))))
+        do (update-missile-pos m)))
 
 (defun fire-missile (player)
   (setf *player-missiles*

@@ -27,14 +27,9 @@
   )
 
 (defun draw-string-at (string x y)
-  (sdl:render-string-shaded string
-                            sdl:*white* sdl:*black*
-                            :font sdl:*default-font*
-                            :cache t
-                            :free t)
-  (sdl:draw-font-at-* x y
-                      :font sdl:*default-font*
-                      :surface sdl:*default-surface*))
+  (sdl:draw-string-solid string (sdl:point :x x :y y)
+                         :font (sdl:initialise-font sdl:*font-10x20*)
+                         :color sdl:*white*))
 
 (defun draw-score ()
 	(draw-string-at (format nil "~d" (format nil "~D" 0))

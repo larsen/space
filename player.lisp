@@ -52,7 +52,9 @@
         (append *player-missiles*
                 (list
                  (make-instance 'player-missile
-                                :x (x player) :y (y player)
+                                :x (+ (x player)
+                                      (ceiling (/ (aref (bounding-box player) 0) 2)))
+                                :y (y player)
                                 :velocity *missile-velocity*
                                 :sprite "laserBlue01.png"
                                 :bounding-radius 20)))))

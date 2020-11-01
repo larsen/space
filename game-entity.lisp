@@ -11,7 +11,7 @@
 (defmethod draw ((entity game-entity))
   (let ((pos-x (x entity))
         (pos-y (y entity)))
-    (draw-sprite (sprite entity) *default-display* pos-x pos-y)
+    (draw-sprite (sprite entity) pos-x pos-y)
     (when *debug*
       (destructuring-bind (sx sy width height)
           (gethash (sprite entity) *sprite-sheet-atlas*)

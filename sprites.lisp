@@ -33,7 +33,7 @@
                        ,(parse-integer (peek-in-sprite sprite "width"))
                        ,(parse-integer (peek-in-sprite sprite "height"))))))))
 
-(defun draw-sprite (sprite-name surface x y)
+(defun draw-sprite (sprite-name x y &key (surface *default-display*))
   (destructuring-bind (sx sy width height) (gethash sprite-name *sprite-sheet-atlas*)
     (setf (clip-rect surface)
           (rectangle-from-edges-* x y (+ x width) (+ y height)))

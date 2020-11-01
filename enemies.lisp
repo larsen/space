@@ -41,7 +41,7 @@
       (setf (x enemy) (aref new-position 0))
       (setf (y enemy) (aref new-position 1)))))
 
-(defun update-enemies-pos ()
+(defun update-enemies ()
   (loop for e in *enemies*
         do (enemy-movement e (sdl-cffi::SDL-get-ticks))))
 

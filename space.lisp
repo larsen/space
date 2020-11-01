@@ -42,7 +42,7 @@
 (defun updates ()
   (update-star-field)
   (update-player-pos *player*)
-  (update-enemies-pos)
+  (update-enemies)
   (update-missiles-pos))
 
 (defun draw-entities ()

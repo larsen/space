@@ -1,10 +1,14 @@
 (in-package #:space)
 
 (defun collision? (entity1 entity2)
-  (< (entity-distance entity1 entity2) 50))
+  (< (entity-distance entity1 entity2)
+     (max (bounding-radius entity1) (bounding-radius entity2))))
 
 (defun check-collisions ()
-  (loop for e in *enemies*
-        do (loop for m in *player-missiles*
-                 do (if (collision? e m)
-                        (print "BOOM!")))))
+  (loop for m in *player-missiles*
+        do (loop for e in *enemies*
+                 do (progn (when *debug*
+                             (draw-line (center m) (center e) :color *red*))
+                           (when (collision? e m)
+                             (incf (damage e) 100)
+                             (incf (damage m) 100))))))

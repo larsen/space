@@ -6,10 +6,10 @@
 
 (defparameter *player* nil)
 
-(defclass player (game-entity)
+(defclass player (game-actor)
   ((score :initarg :score :initform 0 :accessor score)))
 
-(defclass player-missile (game-entity) ())
+(defclass player-missile (game-actor) ())
 
 (defun init-player ()
   (setf *player*
@@ -17,7 +17,7 @@
                        :x (/ *window-width* 2) :y (- *window-height* 50)
                        :velocity *player-velocity*
                        :sprite "playerShip1_blue.png"
-                       :bounding-radius 20)))
+                       :bounding-radius 50)))
 
 (defun draw-missiles ()
   (loop for m in *player-missiles*
@@ -35,12 +35,17 @@
 
 (defun update-missile-pos (m)
   (let ((new-position-y (- (y m) (* 1 (velocity m)))))
-    (when (> new-position-y 0)
-      (setf (y m) new-position-y))))
+    (setf (y m) new-position-y)))
 
-(defun update-missiles-pos ()
+(defun update-missiles ()
   (loop for m in *player-missiles*
-        do (update-missile-pos m)))
+        do (update-missile-pos m))
+  (setf *player-missiles*
+        (remove-if
+         (lambda (m)
+           (or (reached-maximum-damage? m)
+               (outside-display-area? m)))
+         *player-missiles*)))
 
 (defun fire-missile (player)
   (setf *player-missiles*

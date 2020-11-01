@@ -53,7 +53,7 @@
   (update-star-field)
   (update-player-pos *player*)
   (update-enemies)
-  (update-missiles-pos))
+  (update-missiles))
 
 (defun draw-entities ()
   (draw-star-field)
@@ -97,7 +97,7 @@
        (progn
          (clear-display (sdl:color :r 0 :g 0 :b 0))
          (updates)
-         ; (check-collisions)
+         (check-collisions)
          (check-timeout-and-exec!)
          (draw-entities)
          (update-display))))))

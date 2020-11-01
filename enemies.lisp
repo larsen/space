@@ -5,7 +5,7 @@
 
 (defparameter *enemies* nil)
 
-(defclass enemy (game-entity)
+(defclass enemy (game-actor)
   ((motion-f :initarg :motion-f :accessor motion-f)))
 
 (defun basic-forward-motion (enemy time)
@@ -27,7 +27,7 @@
               for idx from 0
               collect (make-instance 'enemy
                                      :x (+ 50 (* idx 120))
-                                     :y (+ (* idx 50) -300)
+                                     :y -100
                                      :velocity *enemy-velocity*
                                      :motion-f #'basic-forward-motion
                                      :sprite "enemyGreen1.png"
@@ -43,7 +43,8 @@
 
 (defun update-enemies ()
   (loop for e in *enemies*
-        do (enemy-movement e (sdl-cffi::SDL-get-ticks))))
+        do (enemy-movement e (sdl-cffi::SDL-get-ticks)))
+  (setf *enemies* (remove-if #'reached-maximum-damage? *enemies* )))
 
 (defun draw-enemies ()
   (loop for e in *enemies* do (draw e)))

@@ -31,13 +31,23 @@
                          :font (sdl:initialise-font sdl:*font-10x20*)
                          :color sdl:*white*))
 
+(defun draw-number-with-sprites (n x y &key (padding nil))
+  (check-type n (integer 0 *))
+  (let* ((fmt (if padding
+                  "~6,'0d"
+                  "~d"))
+         (n-as-string (format nil fmt n)))
+    (loop for d across n-as-string
+          for idx from 0
+          do (draw-sprite
+              (format nil "numeral~A.png" d)
+              (+ x (* idx 20)) y))))
+
 (defun draw-score ()
-	(draw-string-at (format nil "~d" (format nil "~D" 0))
-                  60 10))
+  (draw-number-with-sprites (score *player*) 500 10 :padding t))
 
 (defun draw-elapsed-time ()
-  (draw-string-at (format nil "~d" (format nil "~D" (floor (elapsed-time))))
-                  10 10))
+  (draw-number-with-sprites (floor (elapsed-time)) 10 10))
 
 (defun updates ()
   (update-star-field)

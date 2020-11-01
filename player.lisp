@@ -6,7 +6,8 @@
 
 (defparameter *player* nil)
 
-(defclass player (game-entity) ())
+(defclass player (game-entity)
+  ((score :initarg :score :initform 0 :accessor score)))
 
 (defclass player-missile (game-entity) ())
 

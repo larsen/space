@@ -34,7 +34,7 @@ call to ELAPSED-TIME would return 0."
 
 (defun check-timeout-and-exec! ()
   "Checks elapsed time and executes any approprioate routine that was
-  installed via AFTER!. The routines that were run are then removed
+  installed via AFTER! or via deflevel. The routines that were run are then removed
   from the structure."
   (let ((current-elapsed-time (elapsed-time)))
     (loop for interval being the hash-key of *timed-actions*

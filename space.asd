@@ -6,7 +6,10 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (#:lispbuilder-sdl #:xmls)
+  :depends-on (#:lispbuilder-sdl
+               #:lispbuilder-sdl-ttf
+               #:xmls
+               #:bordeaux-threads)
   :components ((:file "package")
                (:file "game-entity")
                (:file "sprites")

@@ -11,6 +11,9 @@
 (defparameter *moving-north* nil)
 (defparameter *moving-south* nil)
 
+(defparameter *background-image* nil)
+(defparameter *banner* nil)
+
 (defparameter *debug* t)
 
 (defun init ()
@@ -26,9 +29,15 @@
   ;(setf *timed-actions* (make-hash-table))
   )
 
+(defparameter *ttf-font-kenvector*
+  (make-instance 'ttf-font-definition
+                 :size 32
+                 :filename (asdf:system-relative-pathname
+                            'space "assets/kenvector_future.ttf")))
+
 (defun draw-string-at (string x y)
   (sdl:draw-string-solid string (sdl:point :x x :y y)
-                         :font (sdl:initialise-font sdl:*font-10x20*)
+                         :font (sdl:initialise-font *ttf-font-kenvector*)
                          :color sdl:*white*))
 
 (defun draw-number-with-sprites (n x y &key (padding nil))
@@ -44,10 +53,29 @@
               (+ x (* idx 20)) y))))
 
 (defun draw-score ()
-  (draw-number-with-sprites (score *player*) 500 10 :padding t))
+  (draw-number-with-sprites (score *player*) 670 10 :padding t))
 
 (defun draw-elapsed-time ()
   (draw-number-with-sprites (floor (elapsed-time)) 10 10))
+
+(defun draw-player-damage-level ()
+  (draw-sprite "buttonBlue.png" 440 10)
+  (draw-box-* 445 15 180 29 :color *red*))
+
+(defun draw-banner ()
+  (when *banner*
+    (draw-string-at *banner* 50 50)))
+
+(defun set-background (background-filename)
+  (setf *background-image*
+        (load-image background-filename
+                    :image-type :JPG
+                    :force t
+                    :color-key-at (vector 0 0))))
+
+(defun draw-background ()
+  (when *background-image*
+    (sdl:draw-surface-at-* *background-image* 0 0)))
 
 (defun updates ()
   (update-star-field)
@@ -56,12 +84,21 @@
   (update-missiles))
 
 (defun draw-entities ()
+  (draw-background)
   (draw-star-field)
   (draw *player*)
   (draw-missiles)
   (draw-enemies)
   (draw-elapsed-time)
-  (draw-score))
+  (draw-score)
+  (draw-player-damage-level)
+  (draw-banner))
+
+(defun set-banner (banner)
+  (setf *banner* banner))
+
+(defun reset-banner ()
+  (setf *banner* nil))
 
 (defun main ()
   (with-init ()
@@ -73,8 +110,11 @@
     (init)
 
     (deflevel 1 "Another nice level"
-      :at 1 (init-enemies)
-      :at 2 (fire-missile *player*))
+      :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
+      :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
+      :after 1 (init-enemies)
+      :after 2 (fire-missile *player*)
+      :after 5 (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
     
     (reset-time)
     (with-events ()

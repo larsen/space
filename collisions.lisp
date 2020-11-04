@@ -11,4 +11,5 @@
                              (draw-line (center m) (center e) :color *red*))
                            (when (collision? e m)
                              (incf (damage e) 100)
-                             (incf (damage m) 100))))))
+                             (incf (damage m) 100)
+                             (incf (score *player*) 50))))))

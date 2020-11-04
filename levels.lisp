@@ -20,7 +20,7 @@
 ;;; uno specifico intervallo di tempo?
 
 (defparameter *last-reset-ticks* nil)
-(defparameter *timed-actions* (make-hash-table))
+(defparameter *timed-actions* nil)
 
 (defun elapsed-time ()
   "Returns the amount of time (in seconds) since the beginning
@@ -46,16 +46,51 @@ call to ELAPSED-TIME would return 0."
 (defmacro after! (interval form)
   `(push ',form (gethash ,interval *timed-actions*)))
 
+;; Level language interpreter
+
+(defun parse-script (script)
+  (case (car script)
+    (:background (parse-set-background-filename (cdr script)))
+    (:after (parse-after (cdr script)))
+    (otherwise nil)))
+
+(defun parse-after (clauses)
+  "Parses the :AFTER command arguments.
+The :AFTER keyword accepts two forms:
+1. :AFTER INTERVAL FORM - This executes FORM when INTERVAL seconds
+are passed since the start of the level
+2. :AFTER INTERVAL FORM :FOR INTERVAL2 :THEN FORM2 - This
+executes a separate thread after INTERVAL seconds. In the thread
+first we evaluate FORM, then we wait for INTERVAL2 seconds, then
+we evaluate FORM2. This can be used to implement behaviours that
+need to execute temporarily, and independent of the game actions."
+  (let ((interval (car clauses))
+        (form (cadr clauses)))
+    (if (eql :for (caddr clauses))
+        ;; Second variant
+        (destructuring-bind (for interval2 then form2 &rest rest) (cddr clauses)
+          (declare (ignore for then))
+          `((push '(bt:make-thread (lambda ()
+                                     ,form
+                                     (sleep ,interval2)
+                                     ,form2))
+                  (gethash ,interval *timed-actions*))
+            ,@(parse-script rest)))
+        ;; First variant
+        `((push ',form (gethash ,interval *timed-actions*))
+          ,@(parse-script (cddr clauses))))))
+
+(defun parse-set-background-filename (clauses)
+  (let ((background-filename (car clauses)))
+    `((set-background ,background-filename)
+      ,@(parse-script (cdr clauses)))))
+
 (defmacro deflevel (number catchphrase &rest script)
-  (let ((directive (gensym))
-        (param1 (gensym))
-        (param2 (gensym)))
-    `(progn
-       (after! 0 (print (format nil "Level ~A: ~A" ,number ,catchphrase)))
-       (loop for (,directive ,param1 ,param2) on ',script by #'cdddr
-             do (case ,directive
-                  ;; FIXME it would be nice to use the after! macro
-                  ;; here as well
-                  (:at (push ,param2 (gethash ,param1 *timed-actions*)))
-                  (otherwise (error "Not supported level directive!")))))))
+  `(progn
+     (reset-time)
+     (reset-banner)
+     (setf *timed-actions* (make-hash-table))
+     (after! 0 (print (format nil "Level ~A: ~A" ,number ,catchphrase)))
+     ,@(parse-script script)))
+
 

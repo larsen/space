@@ -29,7 +29,7 @@
                                      :x (+ 50 (* idx 120))
                                      :y -100
                                      :velocity *enemy-velocity*
-                                     :motion-f #'basic-forward-motion
+                                     :motion-f #'sinus-forward-motion
                                      :sprite "enemyGreen1.png"
                                      :bounding-radius 30))))
 

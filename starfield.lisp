@@ -5,7 +5,7 @@
 
 (defun init-star-field ()
   (setf *star-field*
-        (make-array (list *star-field-size*)
+        (make-array *star-field-size*
                     :element-type 'vector
                     :initial-contents (loop for i from 1 to *star-field-size*
                                             collect (vector (random *window-width*)

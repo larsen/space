@@ -2,7 +2,7 @@
 
 (defparameter *player-velocity* 15)
 (defparameter *player-missiles* nil)
-(defparameter *missile-velocity* 5)
+(defparameter *missile-velocity* 20)
 
 (defparameter *player* nil)
 

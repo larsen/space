@@ -111,9 +111,10 @@
 
     (deflevel 1 "Another nice level"
       :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
-      :after 0 (set-banner "Galaxy qSector I") :for 2 :then (reset-banner)
+      :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
       :after 1 (init-enemies)
-      :after 2 (fire-missile *player*))
+      :after 2 (fire-missile *player*)
+      :after 5 (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
     
     (reset-time)
     (with-events ()

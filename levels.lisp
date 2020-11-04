@@ -70,7 +70,7 @@ need to execute temporarily, and independent of the game actions."
         ;; Second variant
         (destructuring-bind (for interval2 then form2 &rest rest) (cddr clauses)
           (declare (ignore for then))
-          `((push (bt:make-thread (lambda ()
+          `((push '(bt:make-thread (lambda ()
                                      ,form
                                      (sleep ,interval2)
                                      ,form2))
@@ -88,6 +88,7 @@ need to execute temporarily, and independent of the game actions."
 (defmacro deflevel (number catchphrase &rest script)
   `(progn
      (reset-time)
+     (reset-banner)
      (setf *timed-actions* (make-hash-table))
      (after! 0 (print (format nil "Level ~A: ~A" ,number ,catchphrase)))
      ,@(parse-script script)))

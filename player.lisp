@@ -16,7 +16,7 @@
         (make-instance 'player
                        :x (/ *window-width* 2) :y (- *window-height* 50)
                        :velocity *player-velocity*
-                       :sprite "playerShip1_blue.png"
+                       :sprite "playerShip2_red.png"
                        :bounding-radius 50)))
 
 (defun draw-missiles ()

@@ -7,6 +7,7 @@
   :version "0.0.1"
   :serial t
   :depends-on (#:lispbuilder-sdl
+               #:lispbuilder-sdl-mixer
                #:lispbuilder-sdl-ttf
                #:xmls
                #:bordeaux-threads

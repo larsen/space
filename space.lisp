@@ -14,6 +14,10 @@
 (defparameter *background-image* nil)
 (defparameter *banner* nil)
 
+(defparameter *background-music* nil)
+(defparameter *fire-missile-snd-fx* nil)
+(defparameter *fire-missile-snd-fx2* nil)
+
 (defparameter *debug* t)
 
 (defun init ()
@@ -120,6 +124,21 @@
     (setf *window* (window *window-width* *window-height*))
     (clear-display (sdl:color :r 0 :g 0 :b 0))
     (sdl:initialise-default-font)
+    (sdl-mixer:init-mixer :mp3)
+    (sdl-mixer:allocate-channels 16)
+    (sdl-mixer:open-audio :chunksize 1024 :enable-callbacks nil)
+    (handler-case
+        (setf *background-music*
+              (sdl-mixer:load-music (asdf:system-relative-pathname
+                                     'space "assets/run_theme.mp3")))
+      (condition () (print "Missing music file")))
+    (setf *fire-missile-snd-fx*
+          (sdl-mixer:load-sample (asdf:system-relative-pathname
+                                  'space "assets/sfx_laser1.ogg")))
+    (setf *fire-missile-snd-fx2*
+          (sdl-mixer:load-sample (asdf:system-relative-pathname
+                                  'space "assets/sfx_laser2.ogg")))
+    (sdl-mixer:play-music *background-music*)
     (update-display)
     (load-sprite-sheet)
     (init)
@@ -135,7 +154,9 @@
                          (:sdl-key-d (setf *moving-west* nil))))
       (:key-down-event (:key key)
                        (case key
-                         (:sdl-key-escape (push-quit-event))
+                         (:sdl-key-escape (progn
+                                            (sdl-mixer:Close-Audio t)
+                                            (push-quit-event)))
                          (:sdl-key-w (setf *moving-north* t))
                          (:sdl-key-a (setf *moving-east* t))
                          (:sdl-key-s (setf *moving-south* t))

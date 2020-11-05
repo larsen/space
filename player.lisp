@@ -17,6 +17,7 @@
                        :bounding-radius 50)))
 
 (defmethod fire-missile ((player player))
+  (sdl-mixer:play-sample *fire-missile-snd-fx*)
   (setf *player-missiles*
         (append *player-missiles*
                 (list

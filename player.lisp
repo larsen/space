@@ -2,14 +2,11 @@
 
 (defparameter *player-velocity* 15)
 (defparameter *player-missiles* nil)
-(defparameter *missile-velocity* 20)
 
 (defparameter *player* nil)
 
 (defclass player (game-actor)
   ((score :initarg :score :initform 0 :accessor score)))
-
-(defclass player-missile (game-actor) ())
 
 (defun init-player ()
   (setf *player*
@@ -19,8 +16,20 @@
                        :sprite "playerShip2_red.png"
                        :bounding-radius 50)))
 
+(defmethod fire-missile ((player player))
+  (setf *player-missiles*
+        (append *player-missiles*
+                (list
+                 (make-instance 'player-missile
+                                :x (+ (x player)
+                                      (ceiling (/ (aref (bounding-box player) 0) 2)))
+                                :y (y player)
+                                :bounding-radius 20)))))
+
 (defun draw-missiles ()
   (loop for m in *player-missiles*
+        do (draw m))
+  (loop for m in *enemy-missiles*
         do (draw m)))
 
 (defun update-player-pos (player)
@@ -38,6 +47,7 @@
     (setf (y m) new-position-y)))
 
 (defun update-missiles ()
+  ;; refactor
   (loop for m in *player-missiles*
         do (update-missile-pos m))
   (setf *player-missiles*
@@ -45,16 +55,12 @@
          (lambda (m)
            (or (reached-maximum-damage? m)
                (outside-display-area? m)))
-         *player-missiles*)))
-
-(defun fire-missile (player)
-  (setf *player-missiles*
-        (append *player-missiles*
-                (list
-                 (make-instance 'player-missile
-                                :x (+ (x player)
-                                      (ceiling (/ (aref (bounding-box player) 0) 2)))
-                                :y (y player)
-                                :velocity *missile-velocity*
-                                :sprite "laserBlue01.png"
-                                :bounding-radius 20)))))
+         *player-missiles*))
+  (loop for m in *enemy-missiles*
+        do (update-missile-pos m))
+  (setf *enemy-missiles*
+        (remove-if
+         (lambda (m)
+           (or (reached-maximum-damage? m)
+               (outside-display-area? m)))
+         *enemy-missiles*)))

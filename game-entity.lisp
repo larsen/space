@@ -1,5 +1,7 @@
 (in-package #:space)
 
+(defparameter *missile-velocity* 20)
+
 (defclass game-entity ()
   ((pos-x :initarg :x :accessor x)
    (pos-y :initarg :y :accessor y)
@@ -8,7 +10,19 @@
    (bounding-radius :initarg :bounding-radius :accessor bounding-radius)))
 
 (defclass game-actor (game-entity)
-  ((damage :initarg :damage :initform 0 :accessor damage)))
+  ((damage :initarg :damage :initform 0 :accessor damage)
+   (maximum-damage :initarg :maximum-damage :initform 200 :accessor maximum-damage)))
+
+(defclass missile (game-actor)
+  ((maximum-damage :initform 100)))
+
+(defclass player-missile (missile)
+  ((velocity :initform *missile-velocity*)
+   (sprite :initform "laserBlue01.png")))
+
+(defclass enemy-missile (missile)
+  ((velocity :initform (* -1 *missile-velocity*))
+   (sprite :initform "laserGreen02.png")))
 
 (defgeneric draw (entity))
 (defmethod draw ((entity  game-entity))
@@ -59,5 +73,7 @@
 
 (defgeneric reached-maximum-damage? (actor))
 (defmethod reached-maximum-damage? ((actor game-actor))
-  (>= (damage actor) 100))
+  (>= (damage actor)
+      (maximum-damage actor)))
 
+(defgeneric fire-missile (actor))

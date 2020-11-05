@@ -12,4 +12,10 @@
                            (when (collision? e m)
                              (incf (damage e) 100)
                              (incf (damage m) 100)
-                             (incf (score *player*) 50))))))
+                             (incf (score *player*) 50)))))
+  (loop for m in *enemy-missiles*
+        do (progn (when *debug*
+                    (draw-line (center m) (center *player*) :color *red*))
+                  (when (collision? *player* m)
+                    (incf (damage *player*) 20)
+                    (incf (damage m) 100)))))

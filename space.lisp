@@ -57,9 +57,13 @@
 (defun draw-elapsed-time ()
   (draw-number-with-sprites (floor (elapsed-time)) 10 10))
 
-(defun draw-player-damage-level ()
+(defun draw-player-damage-level (player)
   (draw-sprite "buttonBlue.png" 440 10)
-  (draw-box-* 445 15 180 29 :color *red*))
+  (let* ((max-bar-length 200)
+        ;; p damage : max damage = curr : max
+        (current-bar-length (/ (* max-bar-length (damage *player*))
+                               (maximum-damage player))))
+    (draw-box-* 445 15 current-bar-length 29 :color *red*)))
 
 (defun draw-banner ()
   (when *banner*
@@ -88,10 +92,9 @@
   (draw *player*)
   (draw-missiles)
   (draw-enemies)
-  (draw-powerups)
   (draw-elapsed-time)
   (draw-score)
-  (draw-player-damage-level)
+  (draw-player-damage-level *player*)
   (draw-banner))
 
 (defun set-banner (banner)
@@ -103,14 +106,13 @@
 (deflevel level1 "Another nice level"
   :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
   :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
-  :after 1 (init-enemies)
-  :after 2 (fire-missile *player*)
+  :after 1 (init-enemies 'enemy 5)
   :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
 
 (deflevel level2 "Extra nice level"
   :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-1.jpg")
   :after 0 (set-banner "Galaxy Sector II") :for 2 :then (reset-banner)
-  :after 1 (init-enemies)
+  :after 1 (init-enemies 'enemy 6)
   :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
 
 (defun main ()
@@ -144,6 +146,9 @@
          (clear-display (sdl:color :r 0 :g 0 :b 0))
          (updates)
          (check-collisions)
+         (when (> (damage *player*)
+                  (maximum-damage *player*))
+           (push-quit-event))
          (check-timeout-and-exec!)
          (draw-entities)
          (update-display))))))

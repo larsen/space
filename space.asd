@@ -9,7 +9,8 @@
   :depends-on (#:lispbuilder-sdl
                #:lispbuilder-sdl-ttf
                #:xmls
-               #:bordeaux-threads)
+               #:bordeaux-threads
+               #:alexandria)
   :components ((:file "package")
                (:file "game-entity")
                (:file "sprites")

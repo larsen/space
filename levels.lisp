@@ -85,12 +85,13 @@ need to execute temporarily, and independent of the game actions."
     `((set-background ,background-filename)
       ,@(parse-script (cdr clauses)))))
 
-(defmacro deflevel (number catchphrase &rest script)
-  `(progn
-     (reset-time)
-     (reset-banner)
-     (setf *timed-actions* (make-hash-table))
-     (after! 0 (print (format nil "Level ~A: ~A" ,number ,catchphrase)))
-     ,@(parse-script script)))
+(defmacro deflevel (name catchphrase &rest script)
+  `(defun ,(alexandria:symbolicate '#:run-level- name) ()
+     (progn
+       (reset-time)
+       (reset-banner)
+       (setf *timed-actions* (make-hash-table))
+       (after! 0 (print (format nil "Level ~A: ~A" ',name ,catchphrase)))
+       ,@(parse-script script))))
 
 

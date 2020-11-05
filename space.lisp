@@ -88,6 +88,7 @@
   (draw *player*)
   (draw-missiles)
   (draw-enemies)
+  (draw-powerups)
   (draw-elapsed-time)
   (draw-score)
   (draw-player-damage-level)
@@ -99,6 +100,19 @@
 (defun reset-banner ()
   (setf *banner* nil))
 
+(deflevel level1 "Another nice level"
+  :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
+  :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
+  :after 1 (init-enemies)
+  :after 2 (fire-missile *player*)
+  :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
+
+(deflevel level2 "Extra nice level"
+  :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-1.jpg")
+  :after 0 (set-banner "Galaxy Sector II") :for 2 :then (reset-banner)
+  :after 1 (init-enemies)
+  :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
+
 (defun main ()
   (with-init ()
     (setf *window* (window *window-width* *window-height*))
@@ -108,13 +122,6 @@
     (load-sprite-sheet)
     (init)
 
-    (deflevel 1 "Another nice level"
-      :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
-      :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
-      :after 1 (init-enemies)
-      :after 2 (fire-missile *player*)
-      :after 5 (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
-    
     (reset-time)
     (with-events ()
       (:quit-event () t)

@@ -12,4 +12,10 @@
                            (when (collision? e m)
                              (incf (damage e) 100)
                              (incf (damage m) 100)
-                             (incf (score *player*) 50))))))
+                             (incf (score *player*) 50)))))
+  (loop for p in *powerups*
+        when (collision? *player* p)
+          do (progn
+               (print "collision with powerup!")
+               (apply-powerup p *player*)))
+  )

@@ -16,6 +16,7 @@
                (:file "sprites")
                (:file "player")
                (:file "enemies")
+               (:file "powerups")
                (:file "starfield")
                (:file "collisions")
                (:file "levels")

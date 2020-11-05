@@ -23,11 +23,10 @@
   (setf *moving-north* nil)
   (setf *moving-south* nil)
   (setf *player-missiles* nil)
+  (setf *background-image* nil)
+  (setf *timed-actions* (make-hash-table))
   (init-star-field)
-  (init-player)
-  ; (init-enemies)
-  ;(setf *timed-actions* (make-hash-table))
-  )
+  (init-player))
 
 (defparameter *ttf-font-kenvector*
   (make-instance 'ttf-font-definition

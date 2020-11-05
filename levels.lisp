@@ -39,9 +39,9 @@ call to ELAPSED-TIME would return 0."
   (let ((current-elapsed-time (elapsed-time)))
     (loop for interval being the hash-key of *timed-actions*
           when (<= interval current-elapsed-time)
-          do (loop for action = (pop (gethash interval *timed-actions*))
-                   while action
-                   do (eval action)))))
+            do (loop for action = (pop (gethash interval *timed-actions*))
+                     while action
+                     do (eval action)))))
 
 (defmacro after! (interval form)
   `(push ',form (gethash ,interval *timed-actions*)))

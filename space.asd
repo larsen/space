@@ -18,6 +18,7 @@
                (:file "enemies")
                (:file "player")
                (:file "starfield")
+               (:file "sounds")
                (:file "collisions")
                (:file "levels")
                (:file "space")))

@@ -51,6 +51,7 @@ call to ELAPSED-TIME would return 0."
 (defun parse-script (script)
   (case (car script)
     (:background (parse-set-background-filename (cdr script)))
+    (:background-music (parse-set-background-music (cdr script)))
     (:after (parse-after (cdr script)))
     (otherwise nil)))
 
@@ -80,6 +81,11 @@ need to execute temporarily, and independent of the game actions."
         `((push ',form (gethash ,interval *timed-actions*))
           ,@(parse-script (cddr clauses))))))
 
+(defun parse-set-background-music (clauses)
+  (let ((background-music-filename (car clauses)))
+    `((set-background-music ,background-music-filename)
+      ,@(parse-script (cdr clauses)))))
+
 (defun parse-set-background-filename (clauses)
   (let ((background-filename (car clauses)))
     `((set-background ,background-filename)
@@ -93,5 +99,3 @@ need to execute temporarily, and independent of the game actions."
        (setf *timed-actions* (make-hash-table))
        (after! 0 (print (format nil "Level ~A: ~A" ',name ,catchphrase)))
        ,@(parse-script script))))
-
-

@@ -109,12 +109,14 @@
 
 (deflevel level1 "Another nice level"
   :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-4.jpg")
+  :background-music (asdf:system-relative-pathname 'space "assets/run_theme.mp3")
   :after 0 (set-banner "Galaxy Sector I") :for 2 :then (reset-banner)
   :after 1 (init-enemies 'enemy 5)
   :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
 
 (deflevel level2 "Extra nice level"
   :background (asdf:system-relative-pathname 'space "assets/SpaceBackground-1.jpg")
+  :background-music (asdf:system-relative-pathname 'space "assets/orbital-colossus.mp3")
   :after 0 (set-banner "Galaxy Sector II") :for 2 :then (reset-banner)
   :after 1 (init-enemies 'enemy 6)
   :after (+ 5 (random 3)) (set-banner "You should have killed the enemies now!") :for 2 :then (reset-banner))
@@ -127,23 +129,21 @@
     (sdl-mixer:init-mixer :mp3)
     (sdl-mixer:allocate-channels 16)
     (sdl-mixer:open-audio :chunksize 1024 :enable-callbacks nil)
-    (handler-case
-        (setf *background-music*
-              (sdl-mixer:load-music (asdf:system-relative-pathname
-                                     'space "assets/run_theme.mp3")))
-      (condition () (print "Missing music file")))
+
     (setf *fire-missile-snd-fx*
           (sdl-mixer:load-sample (asdf:system-relative-pathname
                                   'space "assets/sfx_laser1.ogg")))
     (setf *fire-missile-snd-fx2*
           (sdl-mixer:load-sample (asdf:system-relative-pathname
                                   'space "assets/sfx_laser2.ogg")))
-    (sdl-mixer:play-music *background-music*)
     (update-display)
     (load-sprite-sheet)
     (init)
 
     (reset-time)
+    (when *background-music*
+      (sdl-mixer:play-music *background-music*))
+
     (with-events ()
       (:quit-event () t)
       (:key-up-event (:key key)

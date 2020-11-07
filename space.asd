@@ -1,9 +1,9 @@
 ;;;; space.asd
 
 (asdf:defsystem #:space
-  :description "Describe space here"
-  :author "Your Name <your.name@example.com>"
-  :license  "Specify license here"
+  :description ""
+  :author "Stefano Rodighiero <stefano.rodighiero@gmail.com>"
+  :license  "Public Domain"
   :version "0.0.1"
   :serial t
   :depends-on (#:lispbuilder-sdl

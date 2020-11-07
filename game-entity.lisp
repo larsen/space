@@ -7,6 +7,8 @@
    (pos-y :initarg :y :accessor y)
    (velocity :initarg :velocity :accessor velocity)
    (sprite :initarg :sprite :accessor sprite)
+   (animation :initform nil :initarg :animation :accessor animation)
+   (animation-thread :initform nil :accessor animation-thread)
    (bounding-radius :initarg :bounding-radius :accessor bounding-radius)))
 
 (defclass game-actor (game-entity)
@@ -28,7 +30,14 @@
 (defmethod draw ((entity  game-entity))
   (let ((pos-x (x entity))
         (pos-y (y entity)))
-    (draw-sprite (sprite entity) pos-x pos-y)
+
+    (cond
+      ((animation entity) (progn
+                            (animate (animation entity) entity)
+                            (draw-sprite (nth (current-frame-index (animation entity))
+                                              (frames (animation entity)))
+                                         (x entity) (y entity))))
+      (t (draw-sprite (sprite entity) pos-x pos-y)))
     (when *debug*
       (destructuring-bind (sx sy width height)
           (gethash (sprite entity) *sprite-sheet-atlas*)
@@ -41,9 +50,9 @@
         (when (bounding-radius entity)
           (sdl:draw-circle-* (aref (center entity) 0) (aref (center entity) 1)
                              (bounding-radius entity)
-                             :color sdl:*red*))))))
+                             :color sdl:*red*)))))
 
-(defgeneric entity-distance (entity1 entity2))
+  (defgeneric entity-distance (entity1 entity2)))
 (defmethod entity-distance ((e1 game-entity) (e2 game-entity))
   "Computes the distance between ENTITY1-pos and ENTITY2-pos. They are both
   assumed to be a vector of integers."

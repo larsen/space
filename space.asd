@@ -15,6 +15,7 @@
   :components ((:file "package")
                (:file "game-entity")
                (:file "sprites")
+               (:file "animations")
                (:file "enemies")
                (:file "player")
                (:file "starfield")

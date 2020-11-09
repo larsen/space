@@ -48,20 +48,14 @@
     (setf (y m) new-position-y)))
 
 (defun update-missiles ()
-  ;; refactor
-  (loop for m in *player-missiles*
+  (loop for m in (nconc *player-missiles* *enemy-missiles*)
         do (update-missile-pos m))
-  (setf *player-missiles*
-        (remove-if
-         (lambda (m)
-           (or (reached-maximum-damage? m)
-               (outside-display-area? m)))
-         *player-missiles*))
-  (loop for m in *enemy-missiles*
-        do (update-missile-pos m))
-  (setf *enemy-missiles*
-        (remove-if
-         (lambda (m)
-           (or (reached-maximum-damage? m)
-               (outside-display-area? m)))
-         *enemy-missiles*)))
+  (labels ((remove-damaged-missiles (missiles-list)
+             (setf missiles-list
+                   (remove-if
+                    (lambda (m)
+                      (or (reached-maximum-damage? m)
+                          (outside-display-area? m)))
+                    missiles-list))))
+    (remove-damaged-missiles *player-missiles*)
+    (remove-damaged-missiles *enemy-missiles*)))

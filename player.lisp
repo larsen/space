@@ -35,13 +35,13 @@
 
 (defun update-player-pos (player)
   (when (and *moving-north* (> (y player) 0))
-    (decf (y player) (* 1 (velocity player))))
+    (decf (y player) (velocity player)))
   (when (and *moving-south* (< (y player) *window-height*))
-    (incf (y player) (* 1 (velocity player))))
+    (incf (y player) (velocity player)))
   (when (and *moving-east* (> (x player) 0))
-    (decf (x player) (* 1 (velocity player))))
+    (decf (x player) (velocity player)))
   (when (and *moving-west* (< (x player) *window-width*))
-    (incf (x player) (* 1 (velocity player)))))
+    (incf (x player) (velocity player))))
 
 (defun update-missile-pos (m)
   (let ((new-position-y (- (y m) (* 1 (velocity m)))))

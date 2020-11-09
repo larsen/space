@@ -16,11 +16,12 @@
 respectively to the first element of VALUES if the index of the
 element processed is above *STAR-FIELD-SIZE* * RATIO, and the second
 element otherwise."
-  (let ((threshold (gensym)))
+  (let ((threshold (gensym))
+        (idx (gensym)))
     `(loop for star across *star-field*
-           for idx from 0
+           for ,idx from 0
            do (let* ((,threshold (* ,ratio *star-field-size*))
-                     (,variable (if (> idx ,threshold)
+                     (,variable (if (> ,idx ,threshold)
                                     ,(first values)
                                     ,(second values))))
                 ,@body))))

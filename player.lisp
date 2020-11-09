@@ -28,9 +28,7 @@
                                 :bounding-radius 20)))))
 
 (defun draw-missiles ()
-  (loop for m in *player-missiles*
-        do (draw m))
-  (loop for m in *enemy-missiles*
+  (loop for m in (nconc *player-missiles* *enemy-missiles*)
         do (draw m)))
 
 (defun update-player-pos (player)

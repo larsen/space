@@ -93,9 +93,8 @@ need to execute temporarily, and independent of the game actions."
 
 (defmacro deflevel (name catchphrase &rest script)
   `(defun ,(alexandria:symbolicate '#:run-level- name) ()
-     (progn
-       (reset-time)
-       (reset-banner)
-       (setf *timed-actions* (make-hash-table))
-       (after! 0 (print (format nil "Level ~A: ~A" ',name ,catchphrase)))
-       ,@(parse-script script))))
+     (reset-time)
+     (reset-banner)
+     (setf *timed-actions* (make-hash-table))
+     (after! 0 (print (format nil "Level ~A: ~A" ',name ,catchphrase)))
+     ,@(parse-script script)))

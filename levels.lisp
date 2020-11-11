@@ -53,7 +53,8 @@ call to ELAPSED-TIME would return 0."
     (:background (parse-set-background-filename (cdr script)))
     (:background-music (parse-set-background-music (cdr script)))
     (:after (parse-after (cdr script)))
-    (otherwise nil)))
+    ('() nil)
+    (otherwise (error (format nil "Unknown directive ~A" (car script))))))
 
 (defun parse-after (clauses)
   "Parses the :AFTER command arguments.

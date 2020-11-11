@@ -25,7 +25,7 @@
    (sprite :initform "laserGreen02.png")))
 
 (defgeneric draw (entity))
-(defmethod draw ((entity  game-entity))
+(defmethod draw ((entity game-entity))
   (let ((pos-x (x entity))
         (pos-y (y entity)))
     (draw-sprite (sprite entity) pos-x pos-y)
@@ -43,10 +43,10 @@
                              (bounding-radius entity)
                              :color sdl:*red*))))))
 
-(defgeneric entity-distance (entity1 entity2))
+(defgeneric entity-distance (entity1 entity2)
+  (:documentation "Computes the distance between ENTITY1-pos and
+  ENTITY2-pos. They are both assumed to be a vector of integers."))
 (defmethod entity-distance ((e1 game-entity) (e2 game-entity))
-  "Computes the distance between ENTITY1-pos and ENTITY2-pos. They are both
-  assumed to be a vector of integers."
   (sdl:distance (center e1) 
                 (center e2)))
 

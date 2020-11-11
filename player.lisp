@@ -19,13 +19,12 @@
 (defmethod fire-missile ((player player))
   (sdl-mixer:play-sample *fire-missile-snd-fx*)
   (setf *player-missiles*
-        (append *player-missiles*
-                (list
-                 (make-instance 'player-missile
+        (push (make-instance 'player-missile
                                 :x (+ (x player)
                                       (ceiling (/ (aref (bounding-box player) 0) 2)))
                                 :y (y player)
-                                :bounding-radius 20)))))
+                                :bounding-radius 20)
+              *player-missiles*)))
 
 (defun draw-missiles ()
   (loop for m in (nconc *player-missiles* *enemy-missiles*)

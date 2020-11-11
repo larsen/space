@@ -67,4 +67,5 @@
   (setf *enemies* (remove-if #'reached-maximum-damage? *enemies* )))
 
 (defun draw-enemies ()
-  (loop for e in *enemies* do (draw e)))
+  (dolist (e *enemies*)
+    (draw e)))

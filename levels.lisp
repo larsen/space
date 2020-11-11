@@ -41,10 +41,10 @@ call to ELAPSED-TIME would return 0."
           when (<= interval current-elapsed-time)
             do (loop for action = (pop (gethash interval *timed-actions*))
                      while action
-                     do (eval action)))))
+                     do (funcall action)))))
 
 (defmacro after! (interval form)
-  `(push ',form (gethash ,interval *timed-actions*)))
+  `(push (lambda () ,form) (gethash ,interval *timed-actions*)))
 
 ;; Level language interpreter
 
@@ -71,14 +71,16 @@ need to execute temporarily, and independent of the game actions."
         ;; Second variant
         (destructuring-bind (for interval2 then form2 &rest rest) (cddr clauses)
           (declare (ignore for then))
-          `((push '(bt:make-thread (lambda ()
-                                     ,form
-                                     (sleep ,interval2)
-                                     ,form2))
+          `((push (lambda ()
+                    (bt:make-thread
+                     (lambda ()
+                       ,form
+                       (sleep ,interval2)
+                       ,form2)))
                   (gethash ,interval *timed-actions*))
             ,@(parse-script rest)))
         ;; First variant
-        `((push ',form (gethash ,interval *timed-actions*))
+        `((push (lambda () ,form) (gethash ,interval *timed-actions*))
           ,@(parse-script (cddr clauses))))))
 
 (defun parse-set-background-music (clauses)

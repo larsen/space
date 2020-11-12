@@ -39,16 +39,3 @@
 (defun update-missile-pos (m)
   (let ((new-position-y (- (y m) (* 1 (velocity m)))))
     (setf (y m) new-position-y)))
-
-(defun update-missiles ()
-  (loop for m in (nconc *player-missiles* *enemy-missiles*)
-        do (update-missile-pos m))
-  (labels ((remove-damaged-missiles (missiles-list)
-             (setf missiles-list
-                   (remove-if
-                    (lambda (m)
-                      (or (reached-maximum-damage? m)
-                          (outside-display-area? m)))
-                    missiles-list))))
-    (remove-damaged-missiles *player-missiles*)
-    (remove-damaged-missiles *enemy-missiles*)))

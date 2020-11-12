@@ -13,17 +13,6 @@
   ((damage :initarg :damage :initform 0 :accessor damage)
    (maximum-damage :initarg :maximum-damage :initform 200 :accessor maximum-damage)))
 
-(defclass missile (game-actor)
-  ((maximum-damage :initform 100)))
-
-(defclass player-missile (missile)
-  ((velocity :initform *missile-velocity*)
-   (sprite :initform "laserBlue01.png")))
-
-(defclass enemy-missile (missile)
-  ((velocity :initform (* -1 *missile-velocity*))
-   (sprite :initform "laserGreen02.png")))
-
 (defgeneric draw (entity))
 (defmethod draw ((entity game-entity))
   (let ((pos-x (x entity))

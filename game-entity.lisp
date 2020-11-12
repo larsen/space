@@ -43,6 +43,10 @@
                              (bounding-radius entity)
                              :color sdl:*red*))))))
 
+(defun draw-entities (entities)
+  (dolist (e entities)
+    (draw e)))
+
 (defgeneric entity-distance (entity1 entity2)
   (:documentation "Computes the distance between ENTITY1-pos and
   ENTITY2-pos. They are both assumed to be a vector of integers."))

@@ -65,7 +65,3 @@
         do (enemy-movement e (sdl-cffi::SDL-get-ticks))
            (funcall (fire-f e) e (sdl-cffi::SDL-get-ticks)))
   (setf *enemies* (remove-if #'reached-maximum-damage? *enemies* )))
-
-(defun draw-enemies ()
-  (dolist (e *enemies*)
-    (draw e)))

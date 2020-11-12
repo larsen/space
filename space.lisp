@@ -27,6 +27,8 @@
   (setf *moving-north* nil)
   (setf *moving-south* nil)
   (setf *player-missiles* nil)
+  (setf *enemies* nil)
+  (setf *enemy-missiles* nil)
   (setf *background-image* nil)
   (setf *timed-actions* (make-hash-table))
   (init-star-field)

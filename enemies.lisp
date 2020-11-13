@@ -44,13 +44,12 @@
 (defmethod fire-missile ((enemy enemy))
   (sdl-mixer:play-sample *fire-missile-snd-fx2*)
   (setf *enemy-missiles*
-        (append *enemy-missiles*
-                (list
-                 (make-instance 'enemy-missile
-                                :x (+ (x enemy)
-                                      (ceiling (/ (aref (bounding-box enemy) 0) 2)))
-                                :y (y enemy)
-                                :bounding-radius 20)))))
+        (push (make-instance 'enemy-missile
+                             :x (+ (x enemy)
+                                   (ceiling (/ (aref (bounding-box enemy) 0) 2)))
+                             :y (y enemy)
+                             :bounding-radius 20)
+              *enemy-missiles*)))
 
 (defun enemy-movement (enemy time)
   "Given an ENEMY object and current TIME, computes and update the

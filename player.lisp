@@ -35,7 +35,3 @@
     (decf (x player) (velocity player)))
   (when (and *moving-west* (< (x player) *window-width*))
     (incf (x player) (velocity player))))
-
-(defun update-missile-pos (m)
-  (let ((new-position-y (- (y m) (* 1 (velocity m)))))
-    (setf (y m) new-position-y)))

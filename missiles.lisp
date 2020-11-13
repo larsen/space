@@ -11,6 +11,10 @@
   ((velocity :initform (* -1 *missile-velocity*))
    (sprite :initform "laserGreen02.png")))
 
+(defun update-missile-pos (m)
+  (let ((new-position-y (- (y m) (* 1 (velocity m)))))
+    (setf (y m) new-position-y)))
+
 (defun update-missiles ()
   (dolist (m (concatenate 'list *player-missiles* *enemy-missiles*))
     (update-missile-pos m))

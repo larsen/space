@@ -12,14 +12,12 @@
    (sprite :initform "laserGreen02.png")))
 
 (defun update-missiles ()
-  (loop for m in (concatenate 'list *player-missiles* *enemy-missiles*)
-        do (update-missile-pos m))
-  (labels ((remove-missiles (missiles-list)
-             (setf missiles-list
-                   (remove-if
-                    (lambda (m)
-                      (or (reached-maximum-damage? m)
-                          (outside-display-area? m)))
-                    missiles-list))))
-    (remove-missiles *player-missiles*)
-    (remove-missiles *enemy-missiles*)))
+  (dolist (m (concatenate 'list *player-missiles* *enemy-missiles*))
+    (update-missile-pos m))
+  (labels ((out-of-game? (missile)
+             (or (reached-maximum-damage? missile)
+                 (outside-display-area? missile))))
+    (setf *player-missiles*
+          (remove-if #'out-of-game? *player-missiles*))
+    (setf *enemy-missiles*
+          (remove-if #'out-of-game? *enemy-missiles*))))

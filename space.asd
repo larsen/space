@@ -17,6 +17,7 @@
                (:file "sprites")
                (:file "enemies")
                (:file "player")
+               (:file "missiles")
                (:file "starfield")
                (:file "sounds")
                (:file "collisions")

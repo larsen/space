@@ -17,7 +17,7 @@
                   (+ (y enemy) (* 1 (velocity enemy))))))
     new-position))
 
-(defun sinus-forward-motion (enemy time)
+(defun sine-forward-motion (enemy time)
   (let ((new-position
           (vector (+ (x enemy) (ceiling (* 10 (sin (/ time 100)))))
                   (+ (y enemy) (* 1 (velocity enemy))))))
@@ -36,7 +36,7 @@
                                      :x (+ 50 (* idx 120))
                                      :y -100
                                      :velocity *enemy-velocity*
-                                     :motion-f #'sinus-forward-motion
+                                     :motion-f #'sine-forward-motion
                                      :fire-f #'random-fire
                                      :sprite "enemyGreen1.png"
                                      :bounding-radius 30))))
@@ -44,13 +44,12 @@
 (defmethod fire-missile ((enemy enemy))
   (sdl-mixer:play-sample *fire-missile-snd-fx2*)
   (setf *enemy-missiles*
-        (append *enemy-missiles*
-                (list
-                 (make-instance 'enemy-missile
-                                :x (+ (x enemy)
-                                      (ceiling (/ (aref (bounding-box enemy) 0) 2)))
-                                :y (y enemy)
-                                :bounding-radius 20)))))
+        (push (make-instance 'enemy-missile
+                             :x (+ (x enemy)
+                                   (ceiling (/ (aref (bounding-box enemy) 0) 2)))
+                             :y (y enemy)
+                             :bounding-radius 20)
+              *enemy-missiles*)))
 
 (defun enemy-movement (enemy time)
   "Given an ENEMY object and current TIME, computes and update the
@@ -62,10 +61,6 @@
 
 (defun update-enemies ()
   (loop for e in *enemies*
-        do (progn
-             (enemy-movement e (sdl-cffi::SDL-get-ticks))
-             (funcall (fire-f e) e (sdl-cffi::SDL-get-ticks))))
+        do (enemy-movement e (sdl-cffi::SDL-get-ticks))
+           (funcall (fire-f e) e (sdl-cffi::SDL-get-ticks)))
   (setf *enemies* (remove-if #'reached-maximum-damage? *enemies* )))
-
-(defun draw-enemies ()
-  (loop for e in *enemies* do (draw e)))

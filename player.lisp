@@ -19,17 +19,12 @@
 (defmethod fire-missile ((player player))
   (sdl-mixer:play-sample *fire-missile-snd-fx*)
   (setf *player-missiles*
-        (append *player-missiles*
-                (list
-                 (make-instance 'player-missile
+        (push (make-instance 'player-missile
                                 :x (+ (x player)
                                       (ceiling (/ (aref (bounding-box player) 0) 2)))
                                 :y (y player)
-                                :bounding-radius 20)))))
-
-(defun draw-missiles ()
-  (loop for m in (nconc *player-missiles* *enemy-missiles*)
-        do (draw m)))
+                                :bounding-radius 20)
+              *player-missiles*)))
 
 (defun update-player-pos (player)
   (when (and *moving-north* (> (y player) 0))
@@ -40,20 +35,3 @@
     (decf (x player) (velocity player)))
   (when (and *moving-west* (< (x player) *window-width*))
     (incf (x player) (velocity player))))
-
-(defun update-missile-pos (m)
-  (let ((new-position-y (- (y m) (* 1 (velocity m)))))
-    (setf (y m) new-position-y)))
-
-(defun update-missiles ()
-  (loop for m in (nconc *player-missiles* *enemy-missiles*)
-        do (update-missile-pos m))
-  (labels ((remove-damaged-missiles (missiles-list)
-             (setf missiles-list
-                   (remove-if
-                    (lambda (m)
-                      (or (reached-maximum-damage? m)
-                          (outside-display-area? m)))
-                    missiles-list))))
-    (remove-damaged-missiles *player-missiles*)
-    (remove-damaged-missiles *enemy-missiles*)))

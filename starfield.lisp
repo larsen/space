@@ -28,11 +28,10 @@ element otherwise."
 
 (defun update-star-field ()
   (with-layered-star-field 1/2 velocity (2 1)
-    (progn
-      (setf (aref star 1) (+ (aref star 1) (* 1 velocity)))
-      (when (> (aref star 1) *window-height*)
-        (setf (aref star 0) (random *window-width*))
-        (setf (aref star 1) 0)))))
+    (setf (aref star 1) (+ (aref star 1) (* 1 velocity)))
+    (when (> (aref star 1) *window-height*)
+      (setf (aref star 0) (random *window-width*))
+      (setf (aref star 1) 0))))
 
 (defun draw-star-field ()
   (with-layered-star-field 2/3 color ((color :r 150 :g 150 :b 150)

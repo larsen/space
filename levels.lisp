@@ -49,12 +49,12 @@ call to ELAPSED-TIME would return 0."
 ;; Level language interpreter
 
 (defun parse-script (script)
-  (case (car script)
-    (:background (parse-set-background-filename (cdr script)))
-    (:background-music (parse-set-background-music (cdr script)))
-    (:after (parse-after (cdr script)))
-    ('() nil)
-    (otherwise (error (format nil "Unknown directive ~A" (car script))))))
+  (when script
+    (case (car script)
+      (:background (parse-set-background-filename (cdr script)))
+      (:background-music (parse-set-background-music (cdr script)))
+      (:after (parse-after (cdr script)))
+      (otherwise (error (format nil "Unknown directive ~A" (car script)))))))
 
 (defun parse-after (clauses)
   "Parses the :AFTER command arguments.

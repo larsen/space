@@ -18,13 +18,12 @@
 
 (defmethod fire-missile ((player player))
   (sdl-mixer:play-sample *fire-missile-snd-fx*)
-  (setf *player-missiles*
-        (push (make-instance 'player-missile
-                                :x (+ (x player)
-                                      (ceiling (/ (aref (bounding-box player) 0) 2)))
-                                :y (y player)
-                                :bounding-radius 20)
-              *player-missiles*)))
+  (push (make-instance 'player-missile
+                       :x (+ (x player)
+                             (ceiling (/ (aref (bounding-box player) 0) 2)))
+                       :y (y player)
+                       :bounding-radius 20)
+        *player-missiles*))
 
 (defun update-player-pos (player)
   (when (and *moving-north* (> (y player) 0))
